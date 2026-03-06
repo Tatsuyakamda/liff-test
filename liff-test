@@ -200,7 +200,7 @@
     // ============================================================
 
     // LIFF IDを入力してください（LINE Developersコンソールで確認できます）
-    const LIFF_ID = 'YOUR_LIFF_ID'; // 例: '1234567890-AbCdEfGh'
+    const LIFF_ID = '2009276936-E6Lu6Spd'; // 例: '1234567890-AbCdEfGh'
 
     // LIFFの初期化
     liff.init({ liffId: LIFF_ID })
