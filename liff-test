@@ -3,89 +3,268 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>予約</title>
+  <title>予約フォーム</title>
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
       background: #f0f4f8;
-      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px 16px;
     }
-    .loader {
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      padding: 24px;
+      width: 100%;
+      max-width: 480px;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #06c755;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      margin-top: 20px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid #06c755;
+    }
+    .field {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    label .required {
+      color: #e53e3e;
+      margin-left: 4px;
+      font-size: 12px;
+    }
+    input[type="text"],
+    input[type="tel"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 15px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      background: #fafafa;
+      color: #1a1a1a;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    input[type="date"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #06c755;
+      background: #fff;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-top: 28px;
+      background: #06c755;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #05b04a; }
+    .btn:disabled { background: #aaa; cursor: not-allowed; }
+    .note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #888;
       text-align: center;
-      color: #555;
+      line-height: 1.6;
     }
-    .loader p { margin-top: 12px; font-size: 15px; }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 4px solid #ddd;
-      border-top-color: #06c755;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto;
+    #preview {
+      margin-top: 20px;
+      background: #f7f9fc;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 14px;
+      color: #333;
+      white-space: pre-wrap;
+      line-height: 1.8;
+      display: none;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    #preview.visible { display: block; }
+    .preview-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #888;
+      margin-bottom: 6px;
+    }
   </style>
 </head>
 <body>
-  <div class="loader">
-    <div class="spinner"></div>
-    <p>予約画面を開いています…</p>
+  <div class="card">
+    <h1>ご予約フォーム</h1>
+    <p class="subtitle">入力後、LINEのトーク画面に内容が反映されます</p>
+
+    <div class="section-title">お客様情報</div>
+    <div class="field">
+      <label>お名前<span class="required">必須</span></label>
+      <input type="text" id="name" placeholder="例：山田 太郎" />
+    </div>
+    <div class="field">
+      <label>電話番号<span class="required">必須</span></label>
+      <input type="tel" id="phone" placeholder="例：090-1234-5678" />
+    </div>
+
+    <div class="section-title">第1希望</div>
+    <div class="field">
+      <label>日付</label>
+      <input type="date" id="date1" />
+    </div>
+    <div class="field">
+      <label>時間</label>
+      <select id="time1">
+        <option value="">選択してください</option>
+        <option>10:00</option><option>10:30</option>
+        <option>11:00</option><option>11:30</option>
+        <option>12:00</option><option>12:30</option>
+        <option>13:00</option><option>13:30</option>
+        <option>14:00</option><option>14:30</option>
+        <option>15:00</option><option>15:30</option>
+        <option>16:00</option><option>16:30</option>
+        <option>17:00</option>
+      </select>
+    </div>
+
+    <div class="section-title">第2希望</div>
+    <div class="field">
+      <label>日付</label>
+      <input type="date" id="date2" />
+    </div>
+    <div class="field">
+      <label>時間</label>
+      <select id="time2">
+        <option value="">選択してください</option>
+        <option>10:00</option><option>10:30</option>
+        <option>11:00</option><option>11:30</option>
+        <option>12:00</option><option>12:30</option>
+        <option>13:00</option><option>13:30</option>
+        <option>14:00</option><option>14:30</option>
+        <option>15:00</option><option>15:30</option>
+        <option>16:00</option><option>16:30</option>
+        <option>17:00</option>
+      </select>
+    </div>
+
+    <div id="preview">
+      <div class="preview-label">▼ LINEに送信される内容（プレビュー）</div>
+      <span id="preview-text"></span>
+    </div>
+
+    <button class="btn" id="submit-btn">LINEのトーク画面に反映する</button>
+    <p class="note">ボタンを押すと、入力内容がトーク画面の入力欄にセットされます。<br>内容を確認してから送信してください。</p>
   </div>
 
   <script>
     // ============================================================
-    // ▼▼▼ 設定：あなたの情報をここに入力してください ▼▼▼
-
-    // LINE公式アカウントのID（例: '@123abcde'）
-    const OA_LINE_ID = '@558ybtzq';
-
-    // LIFF ID（LINE DevelopersコンソールのLIFF設定画面で確認できます）
-    const LIFF_ID = '2009276936-E6Lu6Spd';
-
-    // Google Apps ScriptのデプロイURL
-    // （GASをウェブアプリとしてデプロイした際に発行されるURL）
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxXi9aVYvbN6LA1MBzJz1c_3VIAo-Rp3wCkGQjiip_J4ArhJzzepjiNNuaaoIxh6t5U/exec';
-
-    // ▲▲▲ 設定ここまで ▲▲▲
+    // ▼▼▼ あなたのLINE公式アカウントIDをここに入力してください ▼▼▼
+    const OA_LINE_ID = '@558ybtzq'; // 例: '@123abcde'
+    // ▲▲▲ ここまで ▲▲▲
     // ============================================================
 
-    // スプレッドシートからテキストを取得してトーク画面へ遷移する
-    async function init() {
-      let text;
+    // LIFF IDを入力してください（LINE Developersコンソールで確認できます）
+    const LIFF_ID = 'YOUR_LIFF_ID'; // 例: '1234567890-AbCdEfGh'
 
-      try {
-        // GAS APIからスプレッドシートのテキストを取得
-        const res = await fetch(GAS_URL);
-        const data = await res.json();
-        text = data.text;
-      } catch (err) {
-        // 取得に失敗した場合のフォールバックテキスト
-        console.error('スプレッドシートの取得に失敗しました:', err);
+    // LIFFの初期化
+    liff.init({ liffId: LIFF_ID })
+      .then(() => { console.log('LIFF initialized'); })
+      .catch(err => { console.error('LIFF init error:', err); });
 
-      }
+    // 入力内容のプレビューをリアルタイム更新
+    const fields = ['name', 'phone', 'date1', 'time1', 'date2', 'time2'];
+    fields.forEach(id => {
+      document.getElementById(id).addEventListener('input', updatePreview);
+      document.getElementById(id).addEventListener('change', updatePreview);
+    });
 
-      // LIFFを初期化してからoaMessageへリダイレクト
-      try {
-        await liff.init({ liffId: LIFF_ID });
-        const encodedId   = encodeURIComponent(OA_LINE_ID);
-        const encodedText = encodeURIComponent(text);
-        const url = `https://line.me/R/oaMessage/${encodedId}/?${encodedText}`;
-        liff.openWindow({ url: url, external: false });
-      } catch (err) {
-        // LIFF初期化に失敗した場合はwindow.location.hrefで直接遷移
-        console.error('LIFF init error:', err);
-        const encodedId   = encodeURIComponent(OA_LINE_ID);
-        const encodedText = encodeURIComponent(text);
-        window.location.href = `https://line.me/R/oaMessage/${encodedId}/?${encodedText}`;
-      }
+    function buildText() {
+      const name  = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const date1 = document.getElementById('date1').value;
+      const time1 = document.getElementById('time1').value;
+      const date2 = document.getElementById('date2').value;
+      const time2 = document.getElementById('time2').value;
+
+      return [
+        `お名前（必須）　${name}`,
+        `電話番号（必須）　${phone}`,
+        '',
+        `ご予約第1希望　`,
+        `日付: ${date1}`,
+        `時間: ${time1}`,
+        '',
+        `ご予約第2希望　`,
+        `日付: ${date2}`,
+        `時間: ${time2}`,
+      ].join('\n');
     }
 
-    init();
+    function updatePreview() {
+      const text = buildText();
+      const preview = document.getElementById('preview');
+      document.getElementById('preview-text').textContent = text;
+      preview.classList.add('visible');
+    }
+
+    // ボタン押下でLINEトーク入力欄へ遷移
+    document.getElementById('submit-btn').addEventListener('click', function () {
+      const name  = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+
+      if (!name) {
+        alert('お名前（必須）を入力してください。');
+        return;
+      }
+      if (!phone) {
+        alert('電話番号（必須）を入力してください。');
+        return;
+      }
+
+      const text = buildText();
+      const encodedOaId = encodeURIComponent(OA_LINE_ID);
+      const encodedText = encodeURIComponent(text);
+      const url = `https://line.me/R/oaMessage/${encodedOaId}/?${encodedText}`;
+
+      // LIFFブラウザ内から遷移
+      liff.openWindow({ url: url, external: false });
+    });
   </script>
 </body>
 </html>
